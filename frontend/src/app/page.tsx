@@ -12,7 +12,7 @@ export default async function Page() {
     const json: MessagesByDate[] = await response.json();
     return (
       <Box position="relative" pb={`${FORM_HEIGHT}px`}>
-        <PageEntity messagesByDates={json} />
+        <PageEntity defaultMessagesByDates={json} />
       </Box>
     );
   } catch (error) {

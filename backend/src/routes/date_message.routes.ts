@@ -3,6 +3,6 @@ import dateMessageController from "../controllers/date_message.controller";
 
 const messageRouter = Router();
 
-messageRouter.get("/", dateMessageController.queryDateMessages);
+messageRouter.get("/", dateMessageController.queryDateMessagesFromHttp);
 
 export default messageRouter;

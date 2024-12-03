@@ -23,7 +23,7 @@ const queryMessages = (_, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).send("Error querying messages");
     }
 });
-const createMessage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createMessage = (data) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const dmm = yield (0, date_message_model_1.main)();
         const m = yield (0, message_model_1.main)();
@@ -33,17 +33,14 @@ const createMessage = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             return (0, formatDate_1.isSameDate)(created_at, today);
         });
         if (messagesByDate) {
-            const message = yield m.createMessage(Object.assign(Object.assign({}, req.body), { dateMessageId: messagesByDate.id }));
-            res.json(message);
-            return;
+            return yield m.createMessage(Object.assign(Object.assign({}, data), { dateMessageId: messagesByDate.id }));
         }
         const messagesByDateCreated = yield dmm.createDateMessage();
-        const message = yield m.createMessage(Object.assign(Object.assign({}, req.body), { dateMessageId: messagesByDateCreated.id }));
-        res.json(message);
+        return yield m.createMessage(Object.assign(Object.assign({}, data), { dateMessageId: messagesByDateCreated.id }));
     }
     catch (error) {
         console.error(error);
-        res.status(500).send("Error creating message");
+        throw new Error(JSON.stringify(error));
     }
 });
 exports.default = { queryMessages, createMessage };

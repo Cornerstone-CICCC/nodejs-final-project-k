@@ -7,11 +7,11 @@ import dayjs from "dayjs";
 import { ChatForm } from "./components/chat-form";
 
 export function PageEntity({
-  messagesByDates,
+  defaultMessagesByDates,
 }: {
-  messagesByDates: MessagesByDate[];
+  defaultMessagesByDates: MessagesByDate[];
 }) {
-  useHooks();
+  const { messagesByDates } = useHooks({ defaultMessagesByDates });
   return (
     <>
       {messagesByDates.map(({ id, created_at, messages }) => {

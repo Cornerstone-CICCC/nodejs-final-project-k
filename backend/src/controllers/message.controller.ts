@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { main } from "../models/message.model";
 import { main as dmMain } from "../models/date_message.model";
-import { MessageData } from "../types/message_data";
 import { isSameDate } from "../utils/formatDate";
 
 const queryMessages = async (_: Request, res: Response) => {
@@ -15,10 +14,7 @@ const queryMessages = async (_: Request, res: Response) => {
   }
 };
 
-const createMessage = async (
-  req: Request<{}, {}, MessageData>,
-  res: Response
-) => {
+const createMessage = async (data: { text: string; userId: number }) => {
   try {
     const dmm = await dmMain();
     const m = await main();
@@ -29,23 +25,20 @@ const createMessage = async (
     });
 
     if (messagesByDate) {
-      const message = await m.createMessage({
-        ...req.body,
+      return await m.createMessage({
+        ...data,
         dateMessageId: messagesByDate.id,
       });
-      res.json(message);
-      return;
     }
 
     const messagesByDateCreated = await dmm.createDateMessage();
-    const message = await m.createMessage({
-      ...req.body,
+    return await m.createMessage({
+      ...data,
       dateMessageId: messagesByDateCreated.id,
     });
-    res.json(message);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error creating message");
+    throw new Error(JSON.stringify(error));
   }
 };
 

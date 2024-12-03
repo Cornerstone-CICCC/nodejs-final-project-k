@@ -7,5 +7,5 @@ const express_1 = require("express");
 const message_controller_1 = __importDefault(require("../controllers/message.controller"));
 const messageRouter = (0, express_1.Router)();
 messageRouter.get("/", message_controller_1.default.queryMessages);
-messageRouter.post("/create", message_controller_1.default.createMessage);
+// messageRouter.post("/create", messageController.createMessage);
 exports.default = messageRouter;
