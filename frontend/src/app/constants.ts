@@ -1,1 +1,1 @@
-export const FORM_HEIGHT = 88;
+export const SIDEBAR_WIDTH = 200;

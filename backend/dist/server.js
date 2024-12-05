@@ -28,6 +28,10 @@ const message_routes_1 = __importDefault(require("./routes/message.routes"));
 app.use("/api/messages", message_routes_1.default);
 const date_message_routes_1 = __importDefault(require("./routes/date_message.routes"));
 app.use("/api/date-messages", date_message_routes_1.default);
+const login_routes_1 = __importDefault(require("./routes/login.routes"));
+app.use("/api/login", login_routes_1.default);
+const directMessageChannelOnUsers_routes_1 = __importDefault(require("./routes/directMessageChannelOnUsers.routes"));
+app.use("/api/direct-message-channels", directMessageChannelOnUsers_routes_1.default);
 // 404 Fallback
 app.use((_, res) => {
     res.status(404).send("Invalid route");

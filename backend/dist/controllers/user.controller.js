@@ -12,20 +12,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const user_model_1 = require("../models/user.model");
 const queryUsers = (_, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const m = yield (0, user_model_1.main)();
+        const m = yield (0, user_model_1.userModel)();
         const users = yield m.queryUsers();
-        res.json(users);
+        res.status(200).json(users);
     }
     catch (error) {
         console.error(error);
         res.status(500).send("Error querying users");
     }
 });
-const createUser = (_, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const m = yield (0, user_model_1.main)();
-        const user = yield m.createUser({});
-        res.json(user);
+        const m = yield (0, user_model_1.userModel)();
+        const user = yield m.createUser({ userName: req.body.userName });
+        res.status(200).json(user);
     }
     catch (error) {
         console.error(error);

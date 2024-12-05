@@ -16,7 +16,7 @@ const queryMessages = (_, res) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const m = yield (0, message_model_1.main)();
         const messages = yield m.queryMessages();
-        res.json(messages);
+        res.status(200).json(messages);
     }
     catch (error) {
         console.error(error);

@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.main = main;
+exports.userModel = userModel;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-function main() {
+function userModel() {
     return __awaiter(this, void 0, void 0, function* () {
         return {
             queryUsers: () => __awaiter(this, void 0, void 0, function* () {
@@ -21,10 +21,13 @@ function main() {
             createUser: (data) => __awaiter(this, void 0, void 0, function* () {
                 return yield prisma.user.create({ data });
             }),
+            queryUser: (input) => __awaiter(this, void 0, void 0, function* () {
+                return yield prisma.user.findUnique(input);
+            }),
         };
     });
 }
-main()
+userModel()
     .then(() => __awaiter(void 0, void 0, void 0, function* () {
     yield prisma.$disconnect();
 }))

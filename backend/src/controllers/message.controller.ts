@@ -7,7 +7,7 @@ const queryMessages = async (_: Request, res: Response) => {
   try {
     const m = await main();
     const messages = await m.queryMessages();
-    res.json(messages);
+    res.status(200).json(messages);
   } catch (error) {
     console.error(error);
     res.status(500).send("Error querying messages");

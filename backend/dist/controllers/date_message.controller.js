@@ -24,7 +24,7 @@ const queryDateMessagesFromHttp = (_, res) => __awaiter(void 0, void 0, void 0, 
                     return date.id === dateMessageId;
                 }) });
         });
-        res.json(messagesByDates);
+        res.status(200).json(messagesByDates);
     }
     catch (error) {
         console.error(error);

@@ -30,6 +30,12 @@ app.use("/api/messages", messageRouter);
 import dateMessageRouter from "./routes/date_message.routes";
 app.use("/api/date-messages", dateMessageRouter);
 
+import loginRouter from "./routes/login.routes";
+app.use("/api/login", loginRouter);
+
+import directMessageChannelRouter from "./routes/directMessageChannelOnUsers.routes";
+app.use("/api/direct-message-channels", directMessageChannelRouter);
+
 // 404 Fallback
 app.use((_, res: Response) => {
   res.status(404).send("Invalid route");

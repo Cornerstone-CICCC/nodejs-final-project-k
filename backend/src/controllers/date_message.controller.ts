@@ -18,7 +18,7 @@ const queryDateMessagesFromHttp = async (_: Request, res: Response) => {
         }),
       };
     });
-    res.json(messagesByDates);
+    res.status(200).json(messagesByDates);
   } catch (error) {
     console.error(error);
     res.status(500).send("Error querying messages");

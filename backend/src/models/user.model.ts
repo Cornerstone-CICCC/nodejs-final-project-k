@@ -1,19 +1,22 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export async function main() {
+export async function userModel() {
   return {
     queryUsers: async () => {
       return await prisma.user.findMany();
     },
-    createUser: async (data: {}) => {
+    createUser: async (data: { userName: string }) => {
       return await prisma.user.create({ data });
+    },
+    queryUser: async (input: Prisma.UserFindUniqueArgs) => {
+      return await prisma.user.findUnique(input);
     },
   };
 }
 
-main()
+userModel()
   .then(async () => {
     await prisma.$disconnect();
   })
