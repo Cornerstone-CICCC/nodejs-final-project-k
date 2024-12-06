@@ -38,7 +38,7 @@ export function Users({
             flexDirection="column"
             onClick={() => openModal(id)}
           >
-            <Text>{userName}</Text>
+            <Text fontSize={{ base: "8px", md: "initial" }}>{userName}</Text>
           </Button>
         );
       })}

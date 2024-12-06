@@ -23,7 +23,7 @@ export default async function Page({
     );
     const messagesJson: MessagesByDate[] = await messages.json();
     return (
-      <Box position="relative" pb={`${FORM_HEIGHT}px`}>
+      <Box position="relative" pb={`${FORM_HEIGHT}px`} h="100%">
         <PageEntity messagesByDates={messagesJson} />
       </Box>
     );

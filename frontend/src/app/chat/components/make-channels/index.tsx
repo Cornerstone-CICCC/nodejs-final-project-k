@@ -2,6 +2,8 @@
 import {
   Box,
   Button,
+  Icon,
+  IconButton,
   Input,
   Modal,
   ModalBody,
@@ -12,15 +14,19 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import { useHooks } from "./hooks";
+import { IoMdAdd } from "react-icons/io";
 
 export function MakeChannels() {
   const { openModal, closeModal, isOpen, isPending, createChannel, nameRef } =
     useHooks();
   return (
-    <>
-      <Box position="fixed" bottom={0}>
-        <Button onClick={openModal}>Make a new channel</Button>
-      </Box>
+    <Box>
+      <IconButton
+        aria-label=""
+        onClick={openModal}
+        p={0}
+        icon={<Icon as={IoMdAdd} />}
+      />
       <Modal isOpen={isOpen} onClose={closeModal} isCentered>
         <ModalOverlay />
         <ModalContent>
@@ -40,6 +46,6 @@ export function MakeChannels() {
           </form>
         </ModalContent>
       </Modal>
-    </>
+    </Box>
   );
 }

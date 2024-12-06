@@ -23,7 +23,7 @@ export function Channels({
             flexDirection="column"
             key={id}
           >
-            <Text>{name}</Text>
+            <Text fontSize={{ base: "8px", md: "initial" }}>{name}</Text>
           </Button>
         );
       })}

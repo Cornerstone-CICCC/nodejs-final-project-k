@@ -26,24 +26,26 @@ export function PageEntity({
               </Text>
               <Divider />
             </Flex>
-            {messages.map(({ id, userName, created_at, text }) => {
-              return (
-                <Box px="16px" key={id} pb="16px">
-                  <Flex gap="8px">
-                    <Text fontWeight={700}>{userName}</Text>
-                    {/* TODO: make time fixed using position: sticky or fixed */}
-                    <time dateTime={dayjs(created_at).format("HH:mm")}>
-                      {dayjs(created_at).format("HH:mm")}
-                    </time>
-                  </Flex>
-                  <Text>{text}</Text>
-                </Box>
-              );
-            })}
+            <Box overflowY="hidden">
+              {messages.map(({ id, userName, created_at, text }) => {
+                return (
+                  <Box px="16px" key={id} pb="16px">
+                    <Flex gap="8px">
+                      <Text fontWeight={700}>{userName}</Text>
+                      {/* TODO: make time fixed using position: sticky or fixed */}
+                      <time dateTime={dayjs(created_at).format("HH:mm")}>
+                        {dayjs(created_at).format("HH:mm")}
+                      </time>
+                    </Flex>
+                    <Text>{text}</Text>
+                  </Box>
+                );
+              })}
+            </Box>
+            <ChatForm />
           </Box>
         );
       })}
-      <ChatForm />
     </Box>
   );
 }

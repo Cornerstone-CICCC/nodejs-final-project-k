@@ -46,18 +46,21 @@ export default async function Layout({
       },
     });
     const channelsJson: Channel[] = await channels.json();
-    console.log("channelsJson", channelsJson);
 
     return (
-      <Box p="24px">
+      <Box h="100dvh">
         <Box
           position="fixed"
-          w={`${SIDEBAR_WIDTH}px`}
+          w={{ base: `${SIDEBAR_WIDTH.BASE}px`, md: `${SIDEBAR_WIDTH.MD}px` }}
           borderRight="1px solid gray"
-          h="100dvh"
+          p="12px"
+          top={0}
+          bottom={0}
+          overflowY="scroll"
         >
           <VStack gap="24px" alignItems="start" w="100%">
-            <VStack gap="24px" alignItems="start">
+            <MakeChannels />
+            <VStack gap="24px" alignItems="start" w="100%">
               <Text fontWeight={700}>Users</Text>
               <Users users={usersJson} />
             </VStack>
@@ -72,9 +75,15 @@ export default async function Layout({
               <Channels channels={channelsJson} />
             </VStack>
           </VStack>
-          <MakeChannels />
         </Box>
-        <Box ml={`${SIDEBAR_WIDTH}px`} w={`calc(100dvw - ${SIDEBAR_WIDTH}px)`}>
+        <Box
+          ml={{ base: `${SIDEBAR_WIDTH.BASE}px`, md: `${SIDEBAR_WIDTH.MD}px` }}
+          w={{
+            base: `calc(100dvw - ${SIDEBAR_WIDTH.BASE}px)`,
+            md: `calc(100dvw - ${SIDEBAR_WIDTH.MD}px)`,
+          }}
+          h="fit-content"
+        >
           {children}
         </Box>
       </Box>

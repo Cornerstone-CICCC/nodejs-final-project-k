@@ -14,8 +14,12 @@ export function ChatForm() {
       position="fixed"
       bottom={0}
       h={`${FORM_HEIGHT}px`}
-      w={`calc(100dvw - ${SIDEBAR_WIDTH}px)`}
+      w={{
+        base: `calc(100dvw - ${SIDEBAR_WIDTH.BASE}px)`,
+        md: `calc(100dvw - ${SIDEBAR_WIDTH.MD}px)`,
+      }}
       borderTop="1px solid gray"
+      bgColor="#1A202C"
     >
       <form onSubmit={submit}>
         <fieldset disabled={isPending}>
