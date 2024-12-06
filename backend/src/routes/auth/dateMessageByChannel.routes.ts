@@ -1,5 +1,5 @@
 import { Router } from "express";
-import dateMessageController from "../controllers/dateMessageByChannel.controller";
+import dateMessageController from "../../controllers/dateMessageByChannel.controller";
 
 const messageRouter = Router();
 

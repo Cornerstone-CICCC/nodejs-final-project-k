@@ -22,18 +22,12 @@ const io = new socket_io_1.Server(server, {
     cors: { origin: "http://localhost:3000", methods: ["GET", "POST"] },
 });
 // Routes
-const user_routes_1 = __importDefault(require("./routes/user.routes"));
-app.use("/api/users", user_routes_1.default);
+const signup_routes_1 = __importDefault(require("./routes/signup.routes"));
+app.use("/api/signup", signup_routes_1.default);
 const login_routes_1 = __importDefault(require("./routes/login.routes"));
 app.use("/api/login", login_routes_1.default);
-const directMessageChannelOnUsers_routes_1 = __importDefault(require("./routes/directMessageChannelOnUsers.routes"));
-app.use("/api/direct-message-channels", directMessageChannelOnUsers_routes_1.default);
-const dateMessageByDirectMessageChannel_routes_1 = __importDefault(require("./routes/dateMessageByDirectMessageChannel.routes"));
-app.use("/api/date-messages-by-direct-message-channel", dateMessageByDirectMessageChannel_routes_1.default);
-const channel_routes_1 = __importDefault(require("./routes/channel.routes"));
-app.use("/api/channels", channel_routes_1.default);
-const dateMessageByChannel_routes_1 = __importDefault(require("./routes/dateMessageByChannel.routes"));
-app.use("/api/date-messages-by-channel", dateMessageByChannel_routes_1.default);
+const index_routes_1 = __importDefault(require("./routes/auth/index.routes"));
+app.use("/api/auth", index_routes_1.default);
 // 404 Fallback
 app.use((_, res) => {
     res.status(404).send("Invalid route");

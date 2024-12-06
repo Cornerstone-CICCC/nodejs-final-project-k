@@ -16,7 +16,7 @@ export default async function Layout({
 }>) {
   try {
     const { token } = await getTokenAction();
-    const users = await fetch("http://localhost:8080/api/users", {
+    const users = await fetch("http://localhost:8080/api/auth/users", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -26,7 +26,7 @@ export default async function Layout({
     const usersJson: User[] = await users.json();
 
     const directMessageChannels = await fetch(
-      "http://localhost:8080/api/direct-message-channels",
+      "http://localhost:8080/api/auth/direct-message-channels",
       {
         method: "GET",
         headers: {
@@ -38,11 +38,15 @@ export default async function Layout({
     const directMessageChannelsJson: Channel[] =
       await directMessageChannels.json();
 
-    const channels = await fetch("http://localhost:8080/api/channels", {
+    const channels = await fetch("http://localhost:8080/api/auth/channels", {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
     const channelsJson: Channel[] = await channels.json();
+    console.log("channelsJson", channelsJson);
 
     return (
       <Box p="24px">

@@ -19,7 +19,7 @@ const queryUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     const { sub } = (0, jwt_1.getSubFromToken)(token);
     try {
-        const directMessageChannels = yield fetch("http://localhost:8080/api/direct-message-channels", {
+        const directMessageChannels = yield fetch("http://localhost:8080/api/auth/direct-message-channels", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -45,15 +45,4 @@ const queryUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(500).send("Error querying users");
     }
 });
-const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const m = yield (0, user_model_1.userModel)();
-        const user = yield m.createUser({ userName: req.body.userName });
-        res.status(200).json(user);
-    }
-    catch (error) {
-        console.error(error);
-        res.status(500).send("Error creating user");
-    }
-});
-exports.default = { queryUsers, createUser };
+exports.default = { queryUsers };

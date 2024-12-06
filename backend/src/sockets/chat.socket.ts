@@ -2,7 +2,7 @@ import { Server, Socket } from "socket.io";
 import messageController from "../controllers/message.controller";
 import directMessageChannelController from "../controllers/directMessageChannelOnUsers.controller";
 import channelController from "../controllers/channel.controller";
-import { getSubFromToken, HMAC_SHA256 } from "../utils/jwt";
+import { getSubFromToken, validateToken } from "../utils/jwt";
 
 export const setupChatSocket = (io: Server) => {
   io.on("connection", (socket: Socket) => {
@@ -24,7 +24,11 @@ export const setupChatSocket = (io: Server) => {
     socket.on(
       "createDirectMessageChannel",
       async (data: { userId: number; token: string }) => {
-        validateToken(data.token);
+        const { error } = validateToken(data.token);
+        if (error) {
+          console.error(error);
+          return;
+        }
         const { sub } = getSubFromToken(data.token);
         try {
           const id =
@@ -47,7 +51,11 @@ export const setupChatSocket = (io: Server) => {
         token: string;
         directMessageChannelId: string;
       }) => {
-        validateToken(data.token);
+        const { error } = validateToken(data.token);
+        if (error) {
+          console.error(error);
+          return;
+        }
         const { sub } = getSubFromToken(data.token);
         try {
           await messageController.createDateMessageByDirectMessageChannel({
@@ -65,7 +73,11 @@ export const setupChatSocket = (io: Server) => {
     socket.on(
       "sendMessageFromChannel",
       async (data: { text: string; token: string; channelId: string }) => {
-        validateToken(data.token);
+        const { error } = validateToken(data.token);
+        if (error) {
+          console.error(error);
+          return;
+        }
         const { sub } = getSubFromToken(data.token);
         try {
           await messageController.createDateMessageByChannel({
@@ -85,14 +97,4 @@ export const setupChatSocket = (io: Server) => {
     });
     console.log("------------------");
   });
-};
-
-const validateToken = (token: string) => {
-  const jwtSecret = process.env.JWT_SECRET ?? "";
-  if (jwtSecret === "") throw new Error("JWT_SECRET is not defined");
-  const splits = token.split(".");
-  const unsignedToken = [splits[0], splits[1]].join(".");
-  if (HMAC_SHA256(jwtSecret, unsignedToken) !== splits[2]) {
-    throw new Error("Invalid token");
-  }
 };

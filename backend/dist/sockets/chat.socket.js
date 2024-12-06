@@ -34,7 +34,11 @@ const setupChatSocket = (io) => {
         }));
         // https://github.com/Cornerstone-CICCC/nodejs-midterm-project-kupuma-ru21/blob/master/backend/src/routes/restaurant.routes.ts
         socket.on("createDirectMessageChannel", (data) => __awaiter(void 0, void 0, void 0, function* () {
-            validateToken(data.token);
+            const { error } = (0, jwt_1.validateToken)(data.token);
+            if (error) {
+                console.error(error);
+                return;
+            }
             const { sub } = (0, jwt_1.getSubFromToken)(data.token);
             try {
                 const id = yield directMessageChannelOnUsers_controller_1.default.createDirectMessageChannel([
@@ -48,7 +52,11 @@ const setupChatSocket = (io) => {
             }
         }));
         socket.on("sendMessageFromDm", (data) => __awaiter(void 0, void 0, void 0, function* () {
-            validateToken(data.token);
+            const { error } = (0, jwt_1.validateToken)(data.token);
+            if (error) {
+                console.error(error);
+                return;
+            }
             const { sub } = (0, jwt_1.getSubFromToken)(data.token);
             try {
                 yield message_controller_1.default.createDateMessageByDirectMessageChannel({
@@ -63,7 +71,11 @@ const setupChatSocket = (io) => {
             }
         }));
         socket.on("sendMessageFromChannel", (data) => __awaiter(void 0, void 0, void 0, function* () {
-            validateToken(data.token);
+            const { error } = (0, jwt_1.validateToken)(data.token);
+            if (error) {
+                console.error(error);
+                return;
+            }
             const { sub } = (0, jwt_1.getSubFromToken)(data.token);
             try {
                 yield message_controller_1.default.createDateMessageByChannel({
@@ -85,14 +97,3 @@ const setupChatSocket = (io) => {
     });
 };
 exports.setupChatSocket = setupChatSocket;
-const validateToken = (token) => {
-    var _a;
-    const jwtSecret = (_a = process.env.JWT_SECRET) !== null && _a !== void 0 ? _a : "";
-    if (jwtSecret === "")
-        throw new Error("JWT_SECRET is not defined");
-    const splits = token.split(".");
-    const unsignedToken = [splits[0], splits[1]].join(".");
-    if ((0, jwt_1.HMAC_SHA256)(jwtSecret, unsignedToken) !== splits[2]) {
-        throw new Error("Invalid token");
-    }
-};

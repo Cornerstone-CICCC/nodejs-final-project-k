@@ -1,5 +1,5 @@
 import { Router } from "express";
-import directMessageChannel from "../controllers/directMessageChannelOnUsers.controller";
+import directMessageChannel from "../../controllers/directMessageChannelOnUsers.controller";
 
 const directMessageChannelRouter = Router();
 

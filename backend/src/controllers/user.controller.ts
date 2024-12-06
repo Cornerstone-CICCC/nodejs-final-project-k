@@ -12,7 +12,7 @@ const queryUsers = async (req: Request, res: Response) => {
 
   try {
     const directMessageChannels = await fetch(
-      "http://localhost:8080/api/direct-message-channels",
+      "http://localhost:8080/api/auth/direct-message-channels",
       {
         method: "GET",
         headers: {
@@ -41,18 +41,4 @@ const queryUsers = async (req: Request, res: Response) => {
   }
 };
 
-const createUser = async (
-  req: Request<{}, {}, { userName: string }>,
-  res: Response
-) => {
-  try {
-    const m = await userModel();
-    const user = await m.createUser({ userName: req.body.userName });
-    res.status(200).json(user);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error creating user");
-  }
-};
-
-export default { queryUsers, createUser };
+export default { queryUsers };

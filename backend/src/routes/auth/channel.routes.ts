@@ -1,5 +1,5 @@
 import { Router } from "express";
-import channel from "../controllers/channel.controller";
+import channel from "../../controllers/channel.controller";
 
 const channelRouter = Router();
 
