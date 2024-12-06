@@ -15,8 +15,8 @@ const prisma = new client_1.PrismaClient();
 function userModel() {
     return __awaiter(this, void 0, void 0, function* () {
         return {
-            queryUsers: () => __awaiter(this, void 0, void 0, function* () {
-                return yield prisma.user.findMany();
+            queryUsers: (input) => __awaiter(this, void 0, void 0, function* () {
+                return yield prisma.user.findMany(input);
             }),
             createUser: (data) => __awaiter(this, void 0, void 0, function* () {
                 return yield prisma.user.create({ data });

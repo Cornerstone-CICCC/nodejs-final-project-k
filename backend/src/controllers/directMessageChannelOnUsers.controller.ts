@@ -2,26 +2,17 @@ import { Request, Response } from "express";
 import { directMessageChannelOnUsersModel } from "../models/directMessageChannelOnUsers.model";
 import { directMessageChannelModel } from "../models/directMessageChannel.model";
 import { userModel } from "../models/user.model";
-import { getSubFromToken } from "../utils/jwt";
+import { getSubFromToken, getToken } from "../utils/jwt";
 
-const queryDirectMessageChannelsFromHttp = async (
-  req: Request,
-  res: Response
-) => {
+const queryDirectMessageChannels = async (req: Request, res: Response) => {
+  const { error, token } = getToken(req.headers.authorization);
+  if (error) {
+    res.status(401).send({ error });
+    return;
+  }
+  const { sub } = getSubFromToken(token);
+
   try {
-    const { authorization } = req.headers;
-    if (authorization === undefined) {
-      res.status(401).send({ error: "Authorization header is required" });
-      return;
-    }
-    const bearer = authorization.replace("Bearer", "").trim();
-    if (bearer === "") {
-      res.status(401).send({ error: "token not found" });
-      return;
-    }
-    const token = bearer.replace("token=", "").trim();
-    const { sub } = getSubFromToken(token);
-
     const m = await directMessageChannelOnUsersModel();
     const myDmChannels = await m.queryDirectMessageChannelOnUsers({
       where: { userId: sub },
@@ -34,17 +25,17 @@ const queryDirectMessageChannelsFromHttp = async (
         },
       },
     });
-    console.log("dmChannelsWithOthers", dmChannelsWithOthers);
     const um = await userModel();
     const result = await Promise.all(
       dmChannelsWithOthers.map(async (c) => {
         const u = await um.queryUser({ where: { id: c.userId } });
         return {
           id: c.directMessageChannelId,
-          userName: u?.userName ?? "not found",
+          name: u?.userName ?? "not found",
         };
       })
     );
+
     res.status(200).json(result);
   } catch (error) {
     console.error(error);
@@ -64,6 +55,6 @@ const createDirectMessageChannel = async (userIds: { userId: number }[]) => {
 };
 
 export default {
-  queryDirectMessageChannelsFromHttp,
+  queryDirectMessageChannels,
   createDirectMessageChannel,
 };

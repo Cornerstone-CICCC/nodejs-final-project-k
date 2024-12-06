@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const date_message_controller_1 = __importDefault(require("../controllers/date_message.controller"));
+const dateMessageByDirectMessageChannel_controller_1 = __importDefault(require("../controllers/dateMessageByDirectMessageChannel.controller"));
 const messageRouter = (0, express_1.Router)();
-messageRouter.get("/", date_message_controller_1.default.queryDateMessagesFromHttp);
+messageRouter.get("/:id", dateMessageByDirectMessageChannel_controller_1.default.queryDateMessageByDirectMessageChannel);
 exports.default = messageRouter;

@@ -1,8 +1,11 @@
 import { Router } from "express";
-import dateMessageController from "../controllers/date_message.controller";
+import dateMessageController from "../controllers/dateMessageByDirectMessageChannel.controller";
 
 const messageRouter = Router();
 
-messageRouter.get("/", dateMessageController.queryDateMessagesFromHttp);
+messageRouter.get(
+  "/:id",
+  dateMessageController.queryDateMessageByDirectMessageChannel
+);
 
 export default messageRouter;

@@ -1,27 +1,30 @@
 "use client";
 import type { Metadata } from "next";
 import { Button, Text } from "@chakra-ui/react";
-import { DmChannel } from "@/app/types/users";
 import { useHooks } from "./hooks";
+import Link from "next/link";
+import { Channel } from "@/app/types/channel";
 
 export function DirectMessageChannels({
   directMessageChannels,
 }: Readonly<{
-  directMessageChannels: DmChannel[];
+  directMessageChannels: Channel[];
 }>) {
   useHooks();
   return (
     <>
-      {directMessageChannels.map(({ id, userName }) => {
+      {directMessageChannels.map(({ id, name }) => {
         return (
           <Button
-            key={id}
+            as={Link}
+            href={`/chat/${id}`}
             w="100%"
             borderBottom="1px solid gray"
             alignItems="start"
             flexDirection="column"
+            key={id}
           >
-            <Text>{userName}</Text>
+            <Text>{name}</Text>
           </Button>
         );
       })}

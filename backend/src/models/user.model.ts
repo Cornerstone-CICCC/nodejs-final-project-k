@@ -4,8 +4,8 @@ const prisma = new PrismaClient();
 
 export async function userModel() {
   return {
-    queryUsers: async () => {
-      return await prisma.user.findMany();
+    queryUsers: async (input: Prisma.UserFindManyArgs) => {
+      return await prisma.user.findMany(input);
     },
     createUser: async (data: { userName: string }) => {
       return await prisma.user.create({ data });

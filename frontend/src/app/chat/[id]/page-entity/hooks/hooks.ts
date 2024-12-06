@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import { socket } from "@/app/utils/socket";
-import { MessagesByDate } from "@/app/types/messagesByDate";
+import { revalidate } from "@/app/chat/actions/revalidate";
 
-export function useHooks({
-  defaultMessagesByDates,
-}: {
-  defaultMessagesByDates: MessagesByDate[];
-}) {
+export function useHooks() {
   // NOTE: show Socket connection status
   const [isConnected, setIsConnected] = useState(false);
   const [transport, setTransport] = useState("N/A");
@@ -41,17 +37,14 @@ export function useHooks({
   console.log(`Status: ${isConnected ? "connected" : "disconnected"}`);
   console.log(`Transport: ${transport}`);
 
-  const [messagesByDates, setMessagesByDates] = useState(
-    defaultMessagesByDates
-  );
   useEffect(() => {
-    socket.on("newMessage", (data) => {
-      setMessagesByDates(data);
+    socket.on("newMessage", () => {
+      (async () => {
+        await revalidate("/chat/:id");
+      })();
     });
     return () => {
       socket.off("newMessage");
     };
   }, []);
-
-  return { messagesByDates };
 }

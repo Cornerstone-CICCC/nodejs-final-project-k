@@ -8,8 +8,8 @@ export async function main() {
     queryMessages: async (arg?: Prisma.MessageFindManyArgs) => {
       return await prisma.message.findMany(arg);
     },
-    createMessage: async (data: MessageData) => {
-      return await prisma.message.create({ data });
+    createMessage: async (input: Prisma.MessageCreateArgs) => {
+      return await prisma.message.create(input);
     },
   };
 }

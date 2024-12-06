@@ -1,3 +1,4 @@
+import { error } from "console";
 import crypto from "crypto";
 
 export const HMAC_SHA256 = (key: string, data: string) => {
@@ -12,4 +13,15 @@ export const getSubFromToken = (token: string) => {
     Buffer.from(splits[1], "base64").toString()
   );
   return { sub };
+};
+
+export const getToken = (authorization: string | undefined) => {
+  if (authorization === undefined) {
+    return { token: "", error: "Authorization header is required" };
+  }
+  const bearer = authorization.replace("Bearer", "").trim();
+  if (bearer === "") {
+    return { token: "", error: "token not found" };
+  }
+  return { token: bearer.replace("token=", "").trim(), error: null };
 };

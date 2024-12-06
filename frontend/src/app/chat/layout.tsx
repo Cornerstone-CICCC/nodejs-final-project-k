@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { Box, Text, VStack } from "@chakra-ui/react";
-import { DmChannel, User } from "../types/users";
+import { User } from "../types/users";
 import { SIDEBAR_WIDTH } from "../constants";
 import { Users } from "./components/users";
 import { getTokenAction } from "./actions/getTokenAction";
 import { DirectMessageChannels } from "./components/direct-message-channels";
+import { Channel } from "../types/channel";
+import { MakeChannels } from "./components/make-channels";
+import { Channels } from "./components/channels";
 
 export default async function Layout({
   children,
@@ -12,10 +15,16 @@ export default async function Layout({
   children: React.ReactNode;
 }>) {
   try {
-    const users = await fetch("http://localhost:8080/api/users");
+    const { token } = await getTokenAction();
+    const users = await fetch("http://localhost:8080/api/users", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const usersJson: User[] = await users.json();
 
-    const { token } = await getTokenAction();
     const directMessageChannels = await fetch(
       "http://localhost:8080/api/direct-message-channels",
       {
@@ -26,8 +35,14 @@ export default async function Layout({
         },
       }
     );
-    const directMessageChannelsJson: DmChannel[] =
+    const directMessageChannelsJson: Channel[] =
       await directMessageChannels.json();
+
+    const channels = await fetch("http://localhost:8080/api/channels", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    const channelsJson: Channel[] = await channels.json();
 
     return (
       <Box p="24px">
@@ -37,16 +52,23 @@ export default async function Layout({
           borderRight="1px solid gray"
           h="100dvh"
         >
-          <VStack gap="24px" alignItems="start" mb="24px">
-            <Text fontWeight={700}>Users</Text>
-            <Users users={usersJson} />
+          <VStack gap="24px" alignItems="start" w="100%">
+            <VStack gap="24px" alignItems="start">
+              <Text fontWeight={700}>Users</Text>
+              <Users users={usersJson} />
+            </VStack>
+            <VStack gap="24px" alignItems="start" w="100%">
+              <Text fontWeight={700}>Direct Messages</Text>
+              <DirectMessageChannels
+                directMessageChannels={directMessageChannelsJson}
+              />
+            </VStack>
+            <VStack gap="24px" alignItems="start" w="100%">
+              <Text fontWeight={700}>Channels</Text>
+              <Channels channels={channelsJson} />
+            </VStack>
           </VStack>
-          <VStack gap="24px" alignItems="start">
-            <Text fontWeight={700}>Direct Messages</Text>
-            <DirectMessageChannels
-              directMessageChannels={directMessageChannelsJson}
-            />
-          </VStack>
+          <MakeChannels />
         </Box>
         <Box ml={`${SIDEBAR_WIDTH}px`} w={`calc(100dvw - ${SIDEBAR_WIDTH}px)`}>
           {children}

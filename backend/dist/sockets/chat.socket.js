@@ -14,23 +14,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setupChatSocket = void 0;
 const message_controller_1 = __importDefault(require("../controllers/message.controller"));
-const date_message_controller_1 = __importDefault(require("../controllers/date_message.controller"));
 const directMessageChannelOnUsers_controller_1 = __importDefault(require("../controllers/directMessageChannelOnUsers.controller"));
+const channel_controller_1 = __importDefault(require("../controllers/channel.controller"));
 const jwt_1 = require("../utils/jwt");
 const setupChatSocket = (io) => {
     io.on("connection", (socket) => {
         // On connect
         console.log(`User connected: ${socket.id}`);
+        socket.on("createChannel", (data) => __awaiter(void 0, void 0, void 0, function* () {
+            try {
+                const id = yield channel_controller_1.default.createChannel({
+                    data: { name: data.name },
+                });
+                io.emit("newChannel", { id: String(id) });
+            }
+            catch (error) {
+                console.error(error);
+            }
+        }));
         // https://github.com/Cornerstone-CICCC/nodejs-midterm-project-kupuma-ru21/blob/master/backend/src/routes/restaurant.routes.ts
-        socket.on("createDirectMessageChat", (data) => __awaiter(void 0, void 0, void 0, function* () {
+        socket.on("createDirectMessageChannel", (data) => __awaiter(void 0, void 0, void 0, function* () {
             validateToken(data.token);
             const { sub } = (0, jwt_1.getSubFromToken)(data.token);
             try {
-                yield directMessageChannelOnUsers_controller_1.default.createDirectMessageChannel([
+                const id = yield directMessageChannelOnUsers_controller_1.default.createDirectMessageChannel([
                     { userId: data.userId },
                     { userId: sub },
                 ]);
-                io.emit("newDirectMessageChannels");
+                io.emit("newDirectMessageChannel", { id: String(id) });
             }
             catch (error) {
                 console.error(error);
@@ -40,8 +51,12 @@ const setupChatSocket = (io) => {
             validateToken(data.token);
             const { sub } = (0, jwt_1.getSubFromToken)(data.token);
             try {
-                yield message_controller_1.default.createMessage({ text: data.text, userId: sub });
-                io.emit("newMessage", yield date_message_controller_1.default.queryDateMessagesFromSocket());
+                yield message_controller_1.default.createDateMessageByDirectMessageChannel({
+                    text: data.text,
+                    userId: sub,
+                    directMessageChannelId: parseInt(data.directMessageChannelId),
+                });
+                io.emit("newMessage");
             }
             catch (error) {
                 console.error(error);

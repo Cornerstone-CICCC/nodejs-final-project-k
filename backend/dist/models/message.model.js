@@ -18,8 +18,8 @@ function main() {
             queryMessages: (arg) => __awaiter(this, void 0, void 0, function* () {
                 return yield prisma.message.findMany(arg);
             }),
-            createMessage: (data) => __awaiter(this, void 0, void 0, function* () {
-                return yield prisma.message.create({ data });
+            createMessage: (input) => __awaiter(this, void 0, void 0, function* () {
+                return yield prisma.message.create(input);
             }),
         };
     });

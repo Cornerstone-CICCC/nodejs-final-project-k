@@ -5,7 +5,7 @@ export type MessagesByDate = {
     id: number;
     text: string;
     created_at: string;
-    userId: number;
+    userName: string;
     dateMessageId: number;
   }[];
 };

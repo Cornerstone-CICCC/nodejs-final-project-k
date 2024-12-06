@@ -5,11 +5,7 @@ const directMessageChannelRouter = Router();
 
 directMessageChannelRouter.get(
   "/",
-  directMessageChannel.queryDirectMessageChannelsFromHttp
+  directMessageChannel.queryDirectMessageChannels
 );
-// directMessageChannelRouter.get(
-//   "/:id",
-//   directMessageChannel.queryDirectMessageChannels
-// );
 
 export default directMessageChannelRouter;

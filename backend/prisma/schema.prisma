@@ -19,8 +19,8 @@ model User {
   userName String @unique
   // relation to Message
   messages   Message[]
-  // relation to Message
-  categories DirectMessageChannelOnUsers[]
+  // relation to DirectMessageChannel
+  directMessageChannels DirectMessageChannelOnUsers[]
 }
 
 model Message {
@@ -30,20 +30,27 @@ model Message {
   // relation to User
   user     User       @relation(fields: [userId], references: [id])
   userId   Int // relation scalar field  (used in the `@relation` attribute above)
-  // relation to DateMessage
-  dateMessage DateMessage?  @relation(fields: [dateMessageId], references: [id])
-  dateMessageId Int?
+  // relation to DateMessageByDirectMessageChannel
+  dateMessageByDirectMessageChannel DateMessageByDirectMessageChannel?  @relation(fields: [dateMessageIdByDirectMessageChannel], references: [id])
+  dateMessageIdByDirectMessageChannel Int?
+  // relation to DateMessageByDirectMessageChannel
+  dateMessageByChannel DateMessageByChannel?  @relation(fields: [dateMessageIdByChannel], references: [id])
+  dateMessageIdByChannel Int?
 }
 
-model DateMessage {
+model DateMessageByDirectMessageChannel {
   id    Int    @id @default(autoincrement())
   created_at DateTime @default(now()) @db.Timestamptz(3)
   messages Message[]
+  // relation to DirectMessageChannel
+  directMessageChannel DirectMessageChannel  @relation(fields: [directMessageChannelId], references: [id])
+  directMessageChannelId Int
 }
 
 model DirectMessageChannel {
   id    Int    @id @default(autoincrement())
   users DirectMessageChannelOnUsers[]
+  dateMessage DateMessageByDirectMessageChannel[]
 }
 
 model DirectMessageChannelOnUsers {
@@ -54,3 +61,20 @@ model DirectMessageChannelOnUsers {
 
   @@id([userId, directMessageChannelId])
 }
+
+model DateMessageByChannel {
+  id    Int    @id @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(3)
+  messages Message[]
+  // relation to DirectMessageChannel
+  channel Channel  @relation(fields: [channelId], references: [id])
+  channelId Int
+}
+
+model Channel {
+  id    Int    @id @default(autoincrement())
+  name String
+  dateMessage DateMessageByChannel[]
+}
+
+

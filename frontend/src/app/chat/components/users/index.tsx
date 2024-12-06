@@ -18,8 +18,13 @@ export function Users({
 }: Readonly<{
   users: User[];
 }>) {
-  const { openModal, closeModal, isOpen, isPending, createDirectMessageChat } =
-    useHooks();
+  const {
+    openModal,
+    closeModal,
+    isOpen,
+    isPending,
+    createDirectMessageChannel,
+  } = useHooks();
 
   return (
     <>
@@ -46,7 +51,7 @@ export function Users({
             <Button
               colorScheme="blue"
               mr={3}
-              onClick={createDirectMessageChat}
+              onClick={createDirectMessageChannel}
               isLoading={isPending}
             >
               Yes

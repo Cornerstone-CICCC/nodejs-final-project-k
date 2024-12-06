@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
 import messageController from "../controllers/message.controller";
-import date_messageController from "../controllers/date_message.controller";
 import directMessageChannelController from "../controllers/directMessageChannelOnUsers.controller";
+import channelController from "../controllers/channel.controller";
 import { getSubFromToken, HMAC_SHA256 } from "../utils/jwt";
 
 export const setupChatSocket = (io: Server) => {
@@ -9,37 +9,58 @@ export const setupChatSocket = (io: Server) => {
     // On connect
     console.log(`User connected: ${socket.id}`);
 
+    socket.on("createChannel", async (data: { name: string }) => {
+      try {
+        const id = await channelController.createChannel({
+          data: { name: data.name },
+        });
+        io.emit("newChannel", { id: String(id) });
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
     // https://github.com/Cornerstone-CICCC/nodejs-midterm-project-kupuma-ru21/blob/master/backend/src/routes/restaurant.routes.ts
     socket.on(
-      "createDirectMessageChat",
+      "createDirectMessageChannel",
       async (data: { userId: number; token: string }) => {
         validateToken(data.token);
         const { sub } = getSubFromToken(data.token);
         try {
-          await directMessageChannelController.createDirectMessageChannel([
-            { userId: data.userId },
-            { userId: sub },
-          ]);
-          io.emit("newDirectMessageChannels");
+          const id =
+            await directMessageChannelController.createDirectMessageChannel([
+              { userId: data.userId },
+              { userId: sub },
+            ]);
+
+          io.emit("newDirectMessageChannel", { id: String(id) });
         } catch (error) {
           console.error(error);
         }
       }
     );
 
-    socket.on("sendMessage", async (data: { text: string; token: string }) => {
-      validateToken(data.token);
-      const { sub } = getSubFromToken(data.token);
-      try {
-        await messageController.createMessage({ text: data.text, userId: sub });
-        io.emit(
-          "newMessage",
-          await date_messageController.queryDateMessagesFromSocket()
-        );
-      } catch (error) {
-        console.error(error);
+    socket.on(
+      "sendMessage",
+      async (data: {
+        text: string;
+        token: string;
+        directMessageChannelId: string;
+      }) => {
+        validateToken(data.token);
+        const { sub } = getSubFromToken(data.token);
+        try {
+          await messageController.createDateMessageByDirectMessageChannel({
+            text: data.text,
+            userId: sub,
+            directMessageChannelId: parseInt(data.directMessageChannelId),
+          });
+          io.emit("newMessage");
+        } catch (error) {
+          console.error(error);
+        }
       }
-    });
+    );
     // On disconnect
     socket.on("disconnect", () => {
       console.log(`User disconnected: ${socket.id}`);

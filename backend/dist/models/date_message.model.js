@@ -15,11 +15,11 @@ const prisma = new client_1.PrismaClient();
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         return {
-            queryDateMessages: () => __awaiter(this, void 0, void 0, function* () {
-                return yield prisma.dateMessage.findMany();
+            queryDateMessageByDirectMessageChannel: (input) => __awaiter(this, void 0, void 0, function* () {
+                return yield prisma.dateMessageByDirectMessageChannel.findMany(input);
             }),
-            createDateMessage: () => __awaiter(this, void 0, void 0, function* () {
-                return yield prisma.dateMessage.create({});
+            createDateMessageByDirectMessageChannel: (input) => __awaiter(this, void 0, void 0, function* () {
+                return yield prisma.dateMessageByDirectMessageChannel.create(input);
             }),
         };
     });
