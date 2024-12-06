@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { main } from "../models/message.model";
+import { main, messageByChannelModel } from "../models/message.model";
 import { dateMessageByDirectMessageChannelModel } from "../models/dateMessageByDirectMessageChannel.model";
 import { dateMessageByChannelModel } from "../models/dateMessageByChannel.model";
 import { isSameDate } from "../utils/formatDate";
@@ -71,7 +71,7 @@ const createDateMessageByChannel = async ({
   try {
     // TODO: transaction
     const dmm = await dateMessageByChannelModel();
-    const m = await main();
+    const m = await messageByChannelModel();
     const messagesByDates = await dmm.queryDateMessageByChannel({
       where: { channelId },
     });
@@ -84,7 +84,7 @@ const createDateMessageByChannel = async ({
       return await m.createMessage({
         data: {
           ...rest,
-          dateMessageIdByDirectMessageChannel: messagesByDate.id,
+          dateMessageIdByChannel: messagesByDate.id,
         },
       });
     }
@@ -104,4 +104,8 @@ const createDateMessageByChannel = async ({
   }
 };
 
-export default { queryMessages, createDateMessageByDirectMessageChannel };
+export default {
+  queryMessages,
+  createDateMessageByDirectMessageChannel,
+  createDateMessageByChannel,
+};

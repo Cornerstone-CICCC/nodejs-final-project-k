@@ -1,5 +1,0 @@
--- AlterTable
-ALTER TABLE "DateMessage" ALTER COLUMN "created_at" SET DATA TYPE TIMESTAMPTZ(3);
-
--- AlterTable
-ALTER TABLE "Message" ALTER COLUMN "created_at" SET DATA TYPE TIMESTAMPTZ(3);

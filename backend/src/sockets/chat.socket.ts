@@ -41,7 +41,7 @@ export const setupChatSocket = (io: Server) => {
     );
 
     socket.on(
-      "sendMessage",
+      "sendMessageFromDm",
       async (data: {
         text: string;
         token: string;
@@ -55,7 +55,25 @@ export const setupChatSocket = (io: Server) => {
             userId: sub,
             directMessageChannelId: parseInt(data.directMessageChannelId),
           });
-          io.emit("newMessage");
+          io.emit("newMessageFromDm");
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    );
+
+    socket.on(
+      "sendMessageFromChannel",
+      async (data: { text: string; token: string; channelId: string }) => {
+        validateToken(data.token);
+        const { sub } = getSubFromToken(data.token);
+        try {
+          await messageController.createDateMessageByChannel({
+            text: data.text,
+            userId: sub,
+            channelId: parseInt(data.channelId),
+          });
+          io.emit("newMessageFromChannel");
         } catch (error) {
           console.error(error);
         }

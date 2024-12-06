@@ -38,13 +38,13 @@ export function useHooks() {
   console.log(`Transport: ${transport}`);
 
   useEffect(() => {
-    socket.on("newMessageFromChannel", () => {
+    socket.on("newMessageFromDm", () => {
       (async () => {
-        await revalidate("/chat/:id");
+        await revalidate("/chat/direct-message");
       })();
     });
     return () => {
-      socket.off("newMessageFromChannel");
+      socket.off("newMessageFromDm");
     };
   }, []);
 }

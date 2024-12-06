@@ -24,17 +24,23 @@ const io = new Server(server, {
 import userRouter from "./routes/user.routes";
 app.use("/api/users", userRouter);
 
-import dateMessageRouter from "./routes/date_message.routes";
-app.use("/api/date-messages", dateMessageRouter);
-
 import loginRouter from "./routes/login.routes";
 app.use("/api/login", loginRouter);
 
 import directMessageChannelRouter from "./routes/directMessageChannelOnUsers.routes";
 app.use("/api/direct-message-channels", directMessageChannelRouter);
 
+import dateMessageByDirectMessageChannelRouter from "./routes/dateMessageByDirectMessageChannel.routes";
+app.use(
+  "/api/date-messages-by-direct-message-channel",
+  dateMessageByDirectMessageChannelRouter
+);
+
 import channelRouter from "./routes/channel.routes";
 app.use("/api/channels", channelRouter);
+
+import dateMessageByChannelRouter from "./routes/dateMessageByChannel.routes";
+app.use("/api/date-messages-by-channel", dateMessageByChannelRouter);
 
 // 404 Fallback
 app.use((_, res: Response) => {

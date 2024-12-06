@@ -9,9 +9,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.messageByChannelModel = messageByChannelModel;
 exports.main = main;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
+function messageByChannelModel() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return {
+            queryMessages: (arg) => __awaiter(this, void 0, void 0, function* () {
+                return yield prisma.messageByChannel.findMany(arg);
+            }),
+            createMessage: (input) => __awaiter(this, void 0, void 0, function* () {
+                return yield prisma.messageByChannel.create(input);
+            }),
+        };
+    });
+}
+messageByChannelModel()
+    .then(() => __awaiter(void 0, void 0, void 0, function* () {
+    yield prisma.$disconnect();
+}))
+    .catch((e) => __awaiter(void 0, void 0, void 0, function* () {
+    console.error(e);
+    yield prisma.$disconnect();
+    process.exit(1);
+}));
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         return {

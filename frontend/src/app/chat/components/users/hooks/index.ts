@@ -30,7 +30,7 @@ export function useHooks() {
       });
       closeModal();
       socket.on("newDirectMessageChannel", ({ id }) => {
-        router.push(`/chat/${id}`);
+        router.push(`/chat/direct-message/${id}`);
       });
     } catch (error) {
       toast({ description: JSON.stringify(error), status: "error" });

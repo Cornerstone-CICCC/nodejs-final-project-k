@@ -6,7 +6,7 @@
     "dev": "concurrently \"npx tsc --watch\" \"nodemon dist/server.js\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc --incremental false --noEmit",
-    "ref": "npx prisma migrate dev --name chat-node-js-tableName"
+    "migrate": "rm -rf ./prisma/migrations && npx prisma migrate dev --name chat-node-js-messages"
   },
   "keywords": [],
   "author": "",

@@ -1,6 +1,7 @@
 "use client";
-import { Button, Input, VStack } from "@chakra-ui/react";
+import { Box, Button, Input, VStack } from "@chakra-ui/react";
 import { useHooks } from "./hooks";
+import Link from "next/link";
 
 export function LoginForm() {
   const { isPending, submitAction } = useHooks();
@@ -16,6 +17,11 @@ export function LoginForm() {
           </VStack>
         </fieldset>
       </form>
+      <Box>
+        <Button as={Link} href="/signup">
+          Signup
+        </Button>
+      </Box>
     </>
   );
 }

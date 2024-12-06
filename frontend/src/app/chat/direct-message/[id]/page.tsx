@@ -11,7 +11,7 @@ export default async function Page({
   try {
     const id = (await params).id;
     const messages = await fetch(
-      `http://localhost:8080/api/date-messages-by-channel/${id}`
+      `http://localhost:8080/api/date-messages-by-direct-message-channel/${id}`
     );
     const messagesJson: MessagesByDate[] = await messages.json();
     return (

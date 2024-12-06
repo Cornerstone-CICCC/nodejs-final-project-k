@@ -17,7 +17,7 @@ export function DirectMessageChannels({
         return (
           <Button
             as={Link}
-            href={`/chat/${id}`}
+            href={`/chat/direct-message/${id}`}
             w="100%"
             borderBottom="1px solid gray"
             alignItems="start"

@@ -47,7 +47,7 @@ const setupChatSocket = (io) => {
                 console.error(error);
             }
         }));
-        socket.on("sendMessage", (data) => __awaiter(void 0, void 0, void 0, function* () {
+        socket.on("sendMessageFromDm", (data) => __awaiter(void 0, void 0, void 0, function* () {
             validateToken(data.token);
             const { sub } = (0, jwt_1.getSubFromToken)(data.token);
             try {
@@ -56,7 +56,22 @@ const setupChatSocket = (io) => {
                     userId: sub,
                     directMessageChannelId: parseInt(data.directMessageChannelId),
                 });
-                io.emit("newMessage");
+                io.emit("newMessageFromDm");
+            }
+            catch (error) {
+                console.error(error);
+            }
+        }));
+        socket.on("sendMessageFromChannel", (data) => __awaiter(void 0, void 0, void 0, function* () {
+            validateToken(data.token);
+            const { sub } = (0, jwt_1.getSubFromToken)(data.token);
+            try {
+                yield message_controller_1.default.createDateMessageByChannel({
+                    text: data.text,
+                    userId: sub,
+                    channelId: parseInt(data.channelId),
+                });
+                io.emit("newMessageFromChannel");
             }
             catch (error) {
                 console.error(error);

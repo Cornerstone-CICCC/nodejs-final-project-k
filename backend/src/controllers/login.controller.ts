@@ -23,7 +23,7 @@ const login = async (
     // Create JWT
     // REF: https://qiita.com/knaot0/items/8427918564400968bd2b
     const header = { alg: "HS256", typ: "JWT" };
-    const payload = { sub: user.id, iat: Math.floor(Date.now() / 1000) };
+    const payload = { sub: user.id, iat: Math.floor(Date.now() / 8080) };
     const encodeBase64 = (json: Record<string, string | number>) => {
       const jsonStr = JSON.stringify(json);
       // Buffer creates a string which can take an optional encoding parameter to specify how to encode the string.

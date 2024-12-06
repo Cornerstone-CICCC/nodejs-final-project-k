@@ -70,7 +70,7 @@ const createDateMessageByChannel = (_a) => __awaiter(void 0, void 0, void 0, fun
     try {
         // TODO: transaction
         const dmm = yield (0, dateMessageByChannel_model_1.dateMessageByChannelModel)();
-        const m = yield (0, message_model_1.main)();
+        const m = yield (0, message_model_1.messageByChannelModel)();
         const messagesByDates = yield dmm.queryDateMessageByChannel({
             where: { channelId },
         });
@@ -80,7 +80,7 @@ const createDateMessageByChannel = (_a) => __awaiter(void 0, void 0, void 0, fun
         });
         if (messagesByDate) {
             return yield m.createMessage({
-                data: Object.assign(Object.assign({}, rest), { dateMessageIdByDirectMessageChannel: messagesByDate.id }),
+                data: Object.assign(Object.assign({}, rest), { dateMessageIdByChannel: messagesByDate.id }),
             });
         }
         const messagesByDateCreated = yield dmm.createDateMessageByChannel({
@@ -95,4 +95,8 @@ const createDateMessageByChannel = (_a) => __awaiter(void 0, void 0, void 0, fun
         throw new Error(JSON.stringify(error));
     }
 });
-exports.default = { queryMessages, createDateMessageByDirectMessageChannel };
+exports.default = {
+    queryMessages,
+    createDateMessageByDirectMessageChannel,
+    createDateMessageByChannel,
+};

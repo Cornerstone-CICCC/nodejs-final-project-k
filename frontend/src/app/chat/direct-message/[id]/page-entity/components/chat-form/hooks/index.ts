@@ -16,10 +16,10 @@ export function useHooks() {
     try {
       if (!inputRef.current) return;
       const { token } = await getTokenAction();
-      socket.emit("sendMessageFromChannel", {
+      socket.emit("sendMessageFromDm", {
         text: inputRef.current.value,
         token,
-        channelId: params.id,
+        directMessageChannelId: params.id,
       });
       inputRef.current.value = "";
     } catch (error) {
