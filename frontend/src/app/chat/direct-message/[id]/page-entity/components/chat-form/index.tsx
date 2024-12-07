@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Flex, Input, Button } from "@chakra-ui/react";
+import { Box, Flex, Input, Button, useColorModeValue } from "@chakra-ui/react";
 import { useHooks } from "./hooks";
 import { SIDEBAR_WIDTH } from "@/app/constants";
 import { FORM_HEIGHT } from "../../../constants";
@@ -19,7 +19,7 @@ export function ChatForm() {
         md: `calc(100dvw - ${SIDEBAR_WIDTH.MD}px)`,
       }}
       borderTop="1px solid gray"
-      bgColor="#1A202C"
+      bgColor={useColorModeValue("white", "#1A202C")}
     >
       <form onSubmit={submit}>
         <fieldset disabled={isPending}>
