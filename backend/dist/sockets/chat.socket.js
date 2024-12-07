@@ -13,7 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setupChatSocket = void 0;
-const message_controller_1 = __importDefault(require("../controllers/message.controller"));
+const dateMessageByDirectMessageChannel_controller_1 = __importDefault(require("../controllers/dateMessageByDirectMessageChannel.controller"));
+const dateMessageByChannel_controller_1 = __importDefault(require("../controllers/dateMessageByChannel.controller"));
 const directMessageChannelOnUsers_controller_1 = __importDefault(require("../controllers/directMessageChannelOnUsers.controller"));
 const channel_controller_1 = __importDefault(require("../controllers/channel.controller"));
 const jwt_1 = require("../utils/jwt");
@@ -59,7 +60,7 @@ const setupChatSocket = (io) => {
             }
             const { sub } = (0, jwt_1.getSubFromToken)(data.token);
             try {
-                yield message_controller_1.default.createDateMessageByDirectMessageChannel({
+                yield dateMessageByDirectMessageChannel_controller_1.default.createDateMessageByDirectMessageChannel({
                     text: data.text,
                     userId: sub,
                     directMessageChannelId: parseInt(data.directMessageChannelId),
@@ -78,12 +79,45 @@ const setupChatSocket = (io) => {
             }
             const { sub } = (0, jwt_1.getSubFromToken)(data.token);
             try {
-                yield message_controller_1.default.createDateMessageByChannel({
+                yield dateMessageByChannel_controller_1.default.createDateMessageByChannel({
                     text: data.text,
                     userId: sub,
                     channelId: parseInt(data.channelId),
                 });
                 io.emit("newMessageFromChannel");
+            }
+            catch (error) {
+                console.error(error);
+            }
+        }));
+        socket.on("updateMessageFromChannel", (data) => __awaiter(void 0, void 0, void 0, function* () {
+            const { error } = (0, jwt_1.validateToken)(data.token);
+            if (error) {
+                console.error(error);
+                return;
+            }
+            try {
+                yield dateMessageByChannel_controller_1.default.updateDateMessageByChannel({
+                    text: data.text,
+                    messageId: data.messageId,
+                });
+                io.emit("updatedMessageFromChannel");
+            }
+            catch (error) {
+                console.error(error);
+            }
+        }));
+        socket.on("deleteMessageFromChannel", (data) => __awaiter(void 0, void 0, void 0, function* () {
+            const { error } = (0, jwt_1.validateToken)(data.token);
+            if (error) {
+                console.error(error);
+                return;
+            }
+            try {
+                yield dateMessageByChannel_controller_1.default.deleteDateMessageByChannel({
+                    messageId: data.messageId,
+                });
+                io.emit("deleteMessageFromChannel");
             }
             catch (error) {
                 console.error(error);

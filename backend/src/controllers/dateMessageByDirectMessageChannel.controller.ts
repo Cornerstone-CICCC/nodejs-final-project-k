@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { dateMessageByDirectMessageChannelModel } from "../models/dateMessageByDirectMessageChannel.model";
 import { main as mm } from "../models/message.model";
 import { userModel } from "../models/user.model";
+import { isSameDate } from "../utils/formatDate";
 
 const queryDateMessageByDirectMessageChannel = async (
   req: Request<{ id: string }>,
@@ -43,4 +44,52 @@ const queryDateMessageByDirectMessageChannel = async (
   }
 };
 
-export default { queryDateMessageByDirectMessageChannel };
+const createDateMessageByDirectMessageChannel = async ({
+  directMessageChannelId,
+  ...rest
+}: {
+  text: string;
+  userId: number;
+  directMessageChannelId: number;
+}) => {
+  try {
+    // TODO: transaction
+    const dmm = await dateMessageByDirectMessageChannelModel();
+    const m = await mm();
+    const messagesByDates = await dmm.queryDateMessageByDirectMessageChannel({
+      where: { directMessageChannelId },
+    });
+    const today = new Date();
+    const messagesByDate = messagesByDates.find(({ created_at }) => {
+      return isSameDate(created_at, today);
+    });
+
+    if (messagesByDate) {
+      return await m.createMessage({
+        data: {
+          ...rest,
+          dateMessageIdByDirectMessageChannel: messagesByDate.id,
+        },
+      });
+    }
+
+    const messagesByDateCreated =
+      await dmm.createDateMessageByDirectMessageChannel({
+        data: { directMessageChannelId },
+      });
+    return await m.createMessage({
+      data: {
+        ...rest,
+        dateMessageIdByDirectMessageChannel: messagesByDateCreated.id,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    throw new Error(JSON.stringify(error));
+  }
+};
+
+export default {
+  queryDateMessageByDirectMessageChannel,
+  createDateMessageByDirectMessageChannel,
+};

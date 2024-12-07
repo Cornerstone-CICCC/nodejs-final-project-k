@@ -5,6 +5,7 @@ import { useHooks } from "./hooks/hooks";
 import dayjs from "dayjs";
 import { ChatForm } from "./components/chat-form";
 import { MessagesByDate } from "@/app/types/messagesByDate";
+import { MessageByDate } from "./components/message-by-date";
 
 export function PageEntity({
   messagesByDates,
@@ -12,6 +13,7 @@ export function PageEntity({
   messagesByDates: MessagesByDate[];
 }) {
   useHooks();
+
   return (
     <Box>
       {messagesByDates.map(({ id, created_at, messages }) => {
@@ -26,19 +28,8 @@ export function PageEntity({
               </Text>
               <Divider />
             </Flex>
-            {messages.map(({ id, userName, created_at, text }) => {
-              return (
-                <Box px="16px" key={id} pb="16px">
-                  <Flex gap="8px">
-                    <Text fontWeight={700}>{userName}</Text>
-                    {/* TODO: make time fixed using position: sticky or fixed */}
-                    <time dateTime={dayjs(created_at).format("HH:mm")}>
-                      {dayjs(created_at).format("HH:mm")}
-                    </time>
-                  </Flex>
-                  <Text>{text}</Text>
-                </Box>
-              );
+            {messages.map((message) => {
+              return <MessageByDate {...message} key={message.id} />;
             })}
           </Box>
         );

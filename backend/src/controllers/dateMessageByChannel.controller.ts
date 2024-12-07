@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { dateMessageByChannelModel } from "../models/dateMessageByChannel.model";
-import { messageByChannelModel } from "../models/message.model";
 import { userModel } from "../models/user.model";
+import { messageByChannelModel } from "../models/messageByChannel.model";
+import { isSameDate } from "../utils/formatDate";
 
 const queryDateMessageByChannel = async (
   req: Request<{ id: string }>,
@@ -41,4 +42,83 @@ const queryDateMessageByChannel = async (
   }
 };
 
-export default { queryDateMessageByChannel };
+const createDateMessageByChannel = async ({
+  channelId,
+  ...rest
+}: {
+  text: string;
+  userId: number;
+  channelId: number;
+}) => {
+  try {
+    // TODO: transaction
+    const dmm = await dateMessageByChannelModel();
+    const m = await messageByChannelModel();
+    const messagesByDates = await dmm.queryDateMessageByChannel({
+      where: { channelId },
+    });
+    const today = new Date();
+    const messagesByDate = messagesByDates.find(({ created_at }) => {
+      return isSameDate(created_at, today);
+    });
+
+    if (messagesByDate) {
+      return await m.createMessage({
+        data: {
+          ...rest,
+          dateMessageIdByChannel: messagesByDate.id,
+        },
+      });
+    }
+
+    const messagesByDateCreated = await dmm.createDateMessageByChannel({
+      data: { channelId },
+    });
+    return await m.createMessage({
+      data: {
+        ...rest,
+        dateMessageIdByChannel: messagesByDateCreated.id,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    throw new Error(JSON.stringify(error));
+  }
+};
+
+const updateDateMessageByChannel = async ({
+  text,
+  messageId,
+}: {
+  text: string;
+  messageId: number;
+}) => {
+  try {
+    const m = await messageByChannelModel();
+    return await m.updateMessage({ where: { id: messageId }, data: { text } });
+  } catch (error) {
+    console.error(error);
+    throw new Error(JSON.stringify(error));
+  }
+};
+
+const deleteDateMessageByChannel = async ({
+  messageId,
+}: {
+  messageId: number;
+}) => {
+  try {
+    const m = await messageByChannelModel();
+    return await m.deleteMessage({ where: { id: messageId } });
+  } catch (error) {
+    console.error(error);
+    throw new Error(JSON.stringify(error));
+  }
+};
+
+export default {
+  queryDateMessageByChannel,
+  createDateMessageByChannel,
+  updateDateMessageByChannel,
+  deleteDateMessageByChannel,
+};

@@ -1,5 +1,6 @@
 import { Server, Socket } from "socket.io";
-import messageController from "../controllers/message.controller";
+import dateMessageByDirectMessageChannelController from "../controllers/dateMessageByDirectMessageChannel.controller";
+import dateMessageByChannelController from "../controllers/dateMessageByChannel.controller";
 import directMessageChannelController from "../controllers/directMessageChannelOnUsers.controller";
 import channelController from "../controllers/channel.controller";
 import { getSubFromToken, validateToken } from "../utils/jwt";
@@ -58,11 +59,13 @@ export const setupChatSocket = (io: Server) => {
         }
         const { sub } = getSubFromToken(data.token);
         try {
-          await messageController.createDateMessageByDirectMessageChannel({
-            text: data.text,
-            userId: sub,
-            directMessageChannelId: parseInt(data.directMessageChannelId),
-          });
+          await dateMessageByDirectMessageChannelController.createDateMessageByDirectMessageChannel(
+            {
+              text: data.text,
+              userId: sub,
+              directMessageChannelId: parseInt(data.directMessageChannelId),
+            }
+          );
           io.emit("newMessageFromDm");
         } catch (error) {
           console.error(error);
@@ -80,12 +83,51 @@ export const setupChatSocket = (io: Server) => {
         }
         const { sub } = getSubFromToken(data.token);
         try {
-          await messageController.createDateMessageByChannel({
+          await dateMessageByChannelController.createDateMessageByChannel({
             text: data.text,
             userId: sub,
             channelId: parseInt(data.channelId),
           });
           io.emit("newMessageFromChannel");
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    );
+
+    socket.on(
+      "updateMessageFromChannel",
+      async (data: { text: string; messageId: number; token: string }) => {
+        const { error } = validateToken(data.token);
+        if (error) {
+          console.error(error);
+          return;
+        }
+        try {
+          await dateMessageByChannelController.updateDateMessageByChannel({
+            text: data.text,
+            messageId: data.messageId,
+          });
+          io.emit("updatedMessageFromChannel");
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    );
+
+    socket.on(
+      "deleteMessageFromChannel",
+      async (data: { messageId: number; token: string }) => {
+        const { error } = validateToken(data.token);
+        if (error) {
+          console.error(error);
+          return;
+        }
+        try {
+          await dateMessageByChannelController.deleteDateMessageByChannel({
+            messageId: data.messageId,
+          });
+          io.emit("deleteMessageFromChannel");
         } catch (error) {
           console.error(error);
         }
