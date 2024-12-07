@@ -48,8 +48,9 @@ export default async function Layout({
     const channelsJson: Channel[] = await channels.json();
 
     return (
-      <Box h="100dvh">
+      <>
         <Box
+          h="100%"
           position="fixed"
           w={{ base: `${SIDEBAR_WIDTH.BASE}px`, md: `${SIDEBAR_WIDTH.MD}px` }}
           borderRight="1px solid gray"
@@ -82,11 +83,11 @@ export default async function Layout({
             base: `calc(100dvw - ${SIDEBAR_WIDTH.BASE}px)`,
             md: `calc(100dvw - ${SIDEBAR_WIDTH.MD}px)`,
           }}
-          h="fit-content"
+          h="100%"
         >
           {children}
         </Box>
-      </Box>
+      </>
     );
   } catch (error) {
     console.error(error);

@@ -1,5 +1,4 @@
 import { Box } from "@chakra-ui/react";
-import { FORM_HEIGHT } from "./constants";
 import { PageEntity } from "./page-entity";
 import { MessagesByDate } from "@/app/types/messagesByDate";
 import { getTokenAction } from "../../actions/getTokenAction";
@@ -23,7 +22,7 @@ export default async function Page({
     );
     const messagesJson: MessagesByDate[] = await messages.json();
     return (
-      <Box position="relative" pb={`${FORM_HEIGHT}px`} h="100%">
+      <Box h="100%">
         <PageEntity messagesByDates={messagesJson} />
       </Box>
     );
